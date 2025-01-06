@@ -150,7 +150,7 @@ model TestCase
     m1_flow_nominal=pum.m_flow_nominal,
     T1_start=293.15,
     T2_start=278.15,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+    energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     TEvaMin=253.15,
     dTHys=3,
     dp1_nominal=pum.dp_nominal/2,
