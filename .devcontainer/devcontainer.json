@@ -1,0 +1,22 @@
+{
+  "name": "jm-testing",
+  "image": "jm",
+  "runArgs": ["--network=host"],
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "extensions.verifySignature": false
+      },
+      "extensions": [
+        "ms-python.python",
+        "kaih2o.python-resource-monitor",
+        "github.copilot",
+        "eamodio.gitlens",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.datawrangler"
+      ]
+    }
+  }
+
+}

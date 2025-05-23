@@ -9,6 +9,13 @@ The following libraries must be on the MODELICAPATH:
 
 """
 
+import os
+import sys
+
+# Add the path to the parser module
+root_repo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+sys.path.insert(0, root_repo_path)
+
 from parsing import parser
 
 
