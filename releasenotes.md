@@ -12,6 +12,8 @@ Released on xx/xx/xxxx.
 
 **The following changes are not backwards compatible, but do not change benchmark results:**
 
+- Add ``bacnet/requirements.txt`` file, change ``bacnet/BopTestProxy.py`` control step argument from ``simulation_step`` to ``control_step``, and ``objectName`` in ``bacnet/example/BACpypes.ini`` from ``BopTestProxy`` to ``ExampleReadWrite``. This is for [#830](https://github.com/ibpsa/project1-boptest/issues/830).
+
 - Change port BOPTEST listens to on localhost from ``:80`` to ``:8000``. This is for [#822](https://github.com/ibpsa/project1-boptest/issues/822).
 
 ## BOPTEST v0.9.0
