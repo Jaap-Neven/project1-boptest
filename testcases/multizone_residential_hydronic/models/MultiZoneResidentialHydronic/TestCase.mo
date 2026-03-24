@@ -70,7 +70,7 @@ protected
 
   // Building reference floor surface
   parameter Modelica.Units.SI.Area S_ref = 100
-    "Buildign rerefence surface"; // used to scale up the actual building and take into account a bigger building surface
+    "Building reference surface"; // used to scale up the actual building and take into account a bigger building surface
 
   // Garage
   parameter Modelica.Units.SI.Area S_Garage = 20.52 * S/S_ref; // Garage floor area
