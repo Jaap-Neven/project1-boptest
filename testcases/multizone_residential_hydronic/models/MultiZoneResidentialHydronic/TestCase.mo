@@ -2293,7 +2293,7 @@ i.e. the French national building energy regulation. Therefore,
 the typology is defined to be representative of French new
 dwellings.
 The area not including the unconditioned attic and unconditioned
-garage is of 81.08 m&sup2;.
+garage is of 79.12 m&sup2;.
 The following figure shows the building layout and
 a sketch of the hydraulic system. The coloured elements in the scheme
 represent the controllable components
@@ -2302,7 +2302,8 @@ through the BOPTEST interface. The dimensions are provided in metres.
 </p>
 <p align=\"center\">
 <img alt=\"Simulated residential dwelling\"
-src=\"../../Resources/layout.png\">
+src=\"../../Resources/layout.png\"
+width=\"800\">
 </p>
 
 <p>
@@ -2338,6 +2339,14 @@ by a different level of insulation (Table 1).
 <tr>
 <td></td>
 <td><p><br><br><br><b><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">U = 0.272 W.m<sup>-2</sup>.K<sup>-1</span></b></sup></p></td>
+</tr>
+<tr>
+<td><p><b><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">Internal wall</span></b></p></td>
+<td><p><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">Outer material (13 mm, &lambda;=0.4 W/mK) + inner material (100 mm, &lambda;=0.667 W/mK) + outer material (13 mm, &lambda;=0.4 W/mK)</span></p></td>
+</tr>
+<tr>
+<td></td>
+<td><p><br><br><br><b><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">U = 4.653 W.m<sup>-2</sup>.K<sup>-1</span></b></sup></p></td>
 </tr>
 <tr>
 <td><p><b><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">Floor</span></b></p></td>
