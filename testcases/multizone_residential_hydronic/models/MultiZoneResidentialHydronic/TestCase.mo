@@ -80,7 +80,7 @@ protected
   parameter Modelica.Units.SI.Area Spi_Garage_Salon = 8.5 * HSP * sqrt(S/S_ref); // Internal wall area between garage and living room
   parameter Modelica.Units.SI.Area Spl_Garage_Combles = S_Garage; // Ceiling area between garage and attic
   parameter Modelica.Units.SI.Area Spl_Garage_exterieur = S_Garage; // Floor area exposed to exterior
-  parameter Modelica.Units.SI.MassFlowRate Q_Garage = 0.5*S_Garage*HSP/3600*d_air; // Air mass flow rate (ventilation)
+  parameter Modelica.Units.SI.MassFlowRate Q_Garage = 0.5*S_Garage*HSP/3600*d_air; // Air infiltration mass flow rate
 
   // Living room
   parameter Modelica.Units.SI.Area S_Salon = 30.32 * S/S_ref; // Living room floor area
@@ -96,7 +96,7 @@ protected
   parameter Modelica.Units.SI.Area Spl_Salon_exterieur = S_Salon; // Floor area exposed to exterior
   parameter Modelica.Units.SI.Area Sf_Salon_Nord = 3.65 * sqrt(S/S_ref); // Window area (north)
   parameter Modelica.Units.SI.Area Sf_Salon_Sud = 5.52 * sqrt(S/S_ref); // Window area (south)
-  parameter Modelica.Units.SI.MassFlowRate Q_Salon = Q_batiment * S_Salon/(S_Salon+S_Chambre1+S_Chambre2+S_Chambre3); // Airflow distribution
+  parameter Modelica.Units.SI.MassFlowRate Q_Salon = Q_batiment * S_Salon/(S_Salon+S_Chambre1+S_Chambre2+S_Chambre3); // Ventilation airflow distribution
 
   // Room 1
   parameter Modelica.Units.SI.Area S_Chambre1 = 11.16 * S/S_ref; // Bedroom 1 floor area
@@ -171,7 +171,7 @@ protected
   parameter Modelica.Units.SI.Area Spl_Combles_Chambre3 = Spl_Chambre3_Combles; // Interface with bedroom 3
   parameter Modelica.Units.SI.Area Spl_Combles_SDB = Spl_SDB_Combles; // Interface with bathroom
   parameter Modelica.Units.SI.Area Spl_Combles_Couloir = Spl_Couloir_Combles; // Interface with corridor
-  parameter Modelica.Units.SI.MassFlowRate Q_Combles = 0.5*S_Combles*H_Combles/2/3600*d_air; // Ventilation mass flow rate
+  parameter Modelica.Units.SI.MassFlowRate Q_Combles = 0.5*S_Combles*H_Combles/2/3600*d_air; // Infiltration air mass flow rate
 
   Modelica.Blocks.Sources.BooleanExpression booDHW(y=false)
     annotation (Placement(transformation(extent={{-190,-170},{-178,-154}})));
