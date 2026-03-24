@@ -147,9 +147,9 @@ protected
   parameter Modelica.Units.SI.Area Sf_SDB_Nord = 0.15 * sqrt(S/S_ref); // Window area (north)
 
   // Hall
-  parameter Modelica.Units.SI.Area S_Couloir = 7.05 * S/S_ref; // Corridor floor area    INCORRECT
+  parameter Modelica.Units.SI.Area S_Couloir = 6.1 * S/S_ref; // Corridor floor area
   parameter Modelica.Units.SI.Length L_ext_Couloir = Spe_Couloir_Ouest/HSP; // Exterior wall length
-  parameter Modelica.Units.SI.Area Spe_Couloir_Ouest = 1.5 * HSP * sqrt(S/S_ref); // Exterior wall (west)    PROBABLY INCORRECT
+  parameter Modelica.Units.SI.Area Spe_Couloir_Ouest = 1 * HSP * sqrt(S/S_ref); // Exterior wall (west)
   parameter Modelica.Units.SI.Area Spi_Couloir_Chambre1 = Spi_Chambre1_Couloir; // Internal wall with bedroom 1
   parameter Modelica.Units.SI.Area Spi_Couloir_Chambre2 = Spi_Chambre2_Couloir; // Internal wall with bedroom 2
   parameter Modelica.Units.SI.Area Spi_Couloir_Chambre3 = Spi_Chambre3_Couloir; // Internal wall with bedroom 3
