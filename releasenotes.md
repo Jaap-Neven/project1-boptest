@@ -13,6 +13,10 @@ Released on xx/xx/xxxx.
 
 - Change port BOPTEST listens to on localhost from ``:80`` to ``:8000``. This is for [#822](https://github.com/ibpsa/project1-boptest/issues/822).
 
+**The following changes are not backwards-compatible and significantly change benchmark results:**
+
+- Fixed building dimensions and updated documentation of multizone residential hydronic test case. Conditioned surface area has been changed slightly, resulting in slightly different KPIs. This is for [#834](https://github.com/ibpsa/project1-boptest/issues/834).
+
 ## BOPTEST v0.9.0
 
 Released on 11/18/2025.

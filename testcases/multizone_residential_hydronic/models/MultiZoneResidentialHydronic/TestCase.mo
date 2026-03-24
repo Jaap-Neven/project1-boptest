@@ -3224,6 +3224,12 @@ See the BOPTEST design documentation for more information.
 </html>", revisions="<html>
 <ul>
 <li>
+March 24th, 2026, by Jaap Neven:<br/>
+Correct model dimensions and update documentation.
+This is for <a href=https://github.com/ibpsa/project1-boptest/issues/834>
+BOPTEST issue #834</a>.
+</li>
+<li>
 September 6th, 2025, by Ettore Zanetti:<br/>
 Update test case to Modelica 4.0
 This is for <a href=https://github.com/ibpsa/project1-boptest/issues/422>
