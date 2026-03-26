@@ -1,9 +1,8 @@
-# Makefile for building Modelica Docker containers with libraries and run unit tests
+# Makefile for building OpenModelica Docker container with Modelica libraries and run unit tests
 
 # Default values
-COMPILER_TOOL=openmodelica
-VERSION=1.25.5
-IMG_NAME=$(COMPILER_TOOL)_fmu_generator
+VERSION=1.24.4
+IMG_NAME=openmodelica_fmu_generator
 
 COMMAND_RUN=docker run \
 	  --name ${IMG_NAME} \
@@ -13,35 +12,27 @@ COMMAND_RUN=docker run \
 	  ${IMG_NAME}
 # Help target
 help:
-	@echo "Usage: make build_compiler_image COMPILER_TOOL=<tool> [OPTIONS]"
-	@echo ""
-	@echo "Tools:"
-	@echo "  openmodelica  - Build OpenModelica container (default)"
+	@echo "Usage: make build_compiler_image VERSION=<x.x.x>"
 	@echo ""
 	@echo "Options:"
-	@echo "  VERSION=<1.21.1>                   - TOOL version (Open Modelica)"
-	@echo "  TOOL_SOURCE_PATH=<source_path>     - TOOL source files path "
-	@echo "  TOOL_LICENSE_PATH=<license_path>   - TOOL license path "
+	@echo "  VERSION=<1.21.1>                   - OpenModelica version"
 	@echo ""
 	@echo "Examples:"
-	@echo "  make build_compiler_image COMPILER_TOOL=OpenModelica VERSION=1.21.0"
-	@echo "=============================================================================================================="
-	@echo "Usage: make compile_testcase_model COMPILER_TOOL=<tool> [OPTIONS]"
-	@echo ""
-	@echo "Tools:"
-	@echo "  OpenModelica  - Build OpenModelica container (default)"
+	@echo "  make build_compiler_image VERSION=1.21.0"
+	@echo "==============================================================="
+	@echo "Usage: make compile_testcase_model TESTCASE=<testcase>"
 	@echo ""
 	@echo "Options:"
 	@echo "  TESTCASE=bestest_air                  - testcase to compile"
 	@echo ""
 	@echo "Example:"
-	@echo "  make compile_testcase_model COMPILER_TOOL=OpenModelica TESTCASE=bestest_air"
+	@echo "  make compile_testcase_model TESTCASE=bestest_air"
 
 # Build target
 
 build_compiler_image:
-	@echo "Building $(COMPILER_TOOL) compiler container with name $(IMG_NAME)..."
-	docker build -f Dockerfile.$(COMPILER_TOOL) \
+	@echo "Building openmodelica compiler container with name $(IMG_NAME)..."
+	docker build -f Dockerfile.openmodelica \
 	--build-arg VERSION=$(VERSION) \
 	--tag $(IMG_NAME) .
 
@@ -88,7 +79,7 @@ compile_testcase_model:
 	make copy_to_cimg ARGS=parsing
 	make copy_to_cimg ARGS=testing/set_library_versions.py
 	make copy_to_cimg ARGS=testcases/${TESTCASE}
-	make exec_cimg ARGS=". miniconda/bin/activate && conda activate pyfmi3 && cd home/boptest/boptest/lib && python set_library_versions.py ${TESTCASE} && cd ${TESTCASE}/models && python compile_fmu.py $(COMPILER_TOOL) && exit"
+	make exec_cimg ARGS=". miniconda/bin/activate && conda activate pyfmi3 && cd home/boptest/boptest/lib && python set_library_versions.py ${TESTCASE} && cd ${TESTCASE}/models && python compile_fmu.py openmodelica && exit"
 	make copy_testcase_from_cimg ARGS=${TESTCASE}/models/kpis.json
 	make copy_testcase_from_cimg ARGS=${TESTCASE}/models/wrapped.fmu
 	make copy_testcase_from_cimg ARGS=${TESTCASE}/models/wrapped.mo
@@ -112,7 +103,7 @@ test_%_travis:
 # Generic test for all testcases except testcase1 and testcase2 to run locally with cleanup
 test_%:
 # Compile testcase model
-	make compile_testcase_model TESTCASE=$* COMPILER_TOOL=openmodelica
+	make compile_testcase_model TESTCASE=$*
 # Build and deploy testcase image
 	cd .. && docker compose build -q web worker provision
 	cd .. && docker compose up -d --quiet-pull web worker provision
@@ -155,7 +146,7 @@ test_podman:
 
 test_testcase1:
 # Compile testcase model
-	make compile_testcase_model TESTCASE=testcase1 COMPILER_TOOL=openmodelica
+	make compile_testcase_model TESTCASE=testcase1
 # Build and deploy testcase image
 	cd .. && docker compose build -q web worker provision
 	cd .. && docker compose up -d --quiet-pull web worker provision
@@ -331,7 +322,7 @@ test_all:
 # Build boptest base image
 	make build_boptest_image
 # Build cimg
-	make build_compiler_image COMPILER_TOOL=openmodelica VERSION=1.25.5
+	make build_compiler_image VERSION=$(VERSION)
 # Run tests
 	make test_parser SINGLE=false
 	make test_data SINGLE=false
