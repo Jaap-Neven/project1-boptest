@@ -170,14 +170,17 @@ class partialChecks(object):
 
         # Check time is index
         assert(df.index.name == 'time')
-        # Resample to 500 points.
-        y_test = []
-        keys = []
-        for key in df.columns:
-            y_test.append(self.create_test_points(df[key], n=500))
-            keys.append(key)
-        df_test = pd.concat(y_test, axis=1, keys=keys)
-        df_test.index.name = 'time'
+        # Resample to 500 points limit if needed.
+        if len(df)>500:
+            y_test = []
+            keys = []
+            for key in df.columns:
+                y_test.append(self.create_test_points(df[key], n=500))
+                keys.append(key)
+            df_test = pd.concat(y_test, axis=1, keys=keys)
+            df_test.index.name = 'time'
+        else:
+            df_test = df
         # Perform test
         if os.path.exists(ref_filepath):
             # If reference exists, check it
