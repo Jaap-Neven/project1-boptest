@@ -170,25 +170,33 @@ class partialChecks(object):
 
         # Check time is index
         assert(df.index.name == 'time')
+        # Resample to 500 points.
+        y_test = []
+        keys = []
+        for key in df.columns:
+            y_test.append(self.create_test_points(df[key], n=500))
+            keys.append(key)
+        df_test = pd.concat(y_test, axis=1, keys=keys)
+        df_test.index.name = 'time'
         # Perform test
         if os.path.exists(ref_filepath):
             # If reference exists, check it
             df_ref = pd.read_csv(ref_filepath, index_col='time')
             # Check all keys in reference are in test
             for key in df_ref.columns.to_list():
-                self.assertTrue(key in df.columns.to_list(), 'Reference key {0} not in test data.'.format(key))
+                self.assertTrue(key in df_test.columns.to_list(), 'Reference key {0} not in test data.'.format(key))
             # Check all keys in test are in reference
-            for key in df.columns.to_list():
+            for key in df_test.columns.to_list():
                 self.assertTrue(key in df_ref.columns.to_list(), 'Test key {0} not in reference data.'.format(key))
             # Check trajectories
-            for key in df.columns:
-                y_test = self.create_test_points(df[key]).to_numpy()
-                y_ref = self.create_test_points(df_ref[key]).to_numpy()
+            for key in df_test.columns:
+                y_test = df_test[key].to_numpy()
+                y_ref = df_ref[key].to_numpy()
                 results = self.check_trajectory(y_test, y_ref)
                 self.assertTrue(results['Pass'], '{0} Key is {1}.'.format(results['Message'],key))
         else:
             # Otherwise, save as reference
-            df.to_csv(ref_filepath)
+            df_test.to_csv(ref_filepath)
 
         return None
 
@@ -345,10 +353,12 @@ class partialChecks(object):
         t = np.linspace(t_min, t_max, n)
         # Interpolate data
         data_interp = np.interp(t,index,data)
-        # Use at most 8 significant digits
+        # Use at most 8 significant digits for data
         data_interp = [ float('{:.8g}'.format(x)) for x in data_interp ]
+        # Use at most 10 significant digits for time
+        t_interp = [ float('{:.10g}'.format(x)) for x in t ]
         # Make Series
-        s_test = pd.Series(data=data_interp, index=t)
+        s_test = pd.Series(data=data_interp, index=t_interp)
 
         return s_test
 
