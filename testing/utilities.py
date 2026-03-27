@@ -204,33 +204,72 @@ class partialChecks(object):
         return None
 
     def compare_ref_json(self, json_test, ref_filepath):
-            '''Compare a json to a reference json saved as .json.
+        '''Compare a json to a reference json saved as .json.
 
-            Parameters
-            ----------
-            json_test : Dict
-                Test json in the form of a dictionary.
-            ref_filepath : str
-                Reference .json file path relative to testing directory.
+        Parameters
+        ----------
+        json_test : Dict
+            Test json in the form of a dictionary.
+        ref_filepath : str
+            Reference .json file path relative to testing directory.
 
-            Returns
-            -------
-            None
+        Returns
+        -------
+        None
 
-            '''
+        '''
 
-            # Perform test
-            if os.path.exists(ref_filepath):
-                # If reference exists, check it
-                with open(ref_filepath, 'r') as f:
-                    json_ref = json.load(f)
-                self.assertTrue(json_test==json_ref, 'json_test:\n{0}\ndoes not equal\njson_ref:\n{1}'.format(json_test, json_ref))
-            else:
-                # Otherwise, save as reference
-                with open(ref_filepath, 'w') as f:
-                    json.dump(json_test,f)
+        # Perform test
+        if os.path.exists(ref_filepath):
+            # If reference exists, check it
+            with open(ref_filepath, 'r') as f:
+                json_ref = json.load(f)
+            # Perform recursive comparison of json structures
+            def recursive_compare(test_obj, ref_obj, path='root'):
+                # Determine if numeric value
+                try:
+                    y_test = float(test_obj)
+                    y_ref = float(ref_obj)
+                    numeric = True
+                except:
+                    y_test = test_obj
+                    y_ref = ref_obj
+                    numeric = False
+                if isinstance(test_obj, dict):
+                    # Check keys in reference are in test
+                    for key in ref_obj:
+                        self.assertTrue(key in test_obj, f'Reference key {key} not in test json at {path}')
+                    # Check keys in test are in reference and recurse
+                    for key in test_obj:
+                        self.assertTrue(key in ref_obj, f'Test key {key} not in reference json at {path}')
+                        new_path = f'{path}.{key}' if path else key
+                        recursive_compare(test_obj[key], ref_obj[key], new_path)
+                elif isinstance(test_obj, list):
+                    self.assertTrue(len(test_obj) == len(ref_obj), f'List length mismatch at {path}')
+                    for idx, (t_item, r_item) in enumerate(zip(test_obj, ref_obj)):
+                        new_path = f'{path}[{idx}]'
+                        recursive_compare(t_item, r_item, new_path)
+                else:
+                    if numeric:
+                        # Compare values with tolerance
+                        tol = 1e-3
+                        err_abs = np.absolute(y_test - y_ref)
+                        if (abs(y_ref) > 10 * tol):
+                            err_rel = err_abs / abs(y_ref)
+                        else:
+                            err_rel = 0
+                        err_tot = err_abs + err_rel
+                        self.assertTrue(err_tot <= tol, f'Total error ({err_tot}) greater than tolerance ({tol}) at {path}: {y_test} in test json != {y_ref} in reference json')
+                    else:
+                        # Compare values
+                        self.assertTrue(y_test == y_ref, f'Value mismatch at {path}: {y_test} in test json != {y_ref} in reference json')
+            recursive_compare(json_test, json_ref)
+        else:
+            # Otherwise, save as reference
+            with open(ref_filepath, 'w') as f:
+                json.dump(json_test,f)
 
-            return None
+        return None
 
     def compare_ref_values_df(self, df, ref_filepath):
         '''Compare a values dataframe to a reference csv.
