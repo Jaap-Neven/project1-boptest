@@ -238,16 +238,16 @@ class partialChecks(object):
                 if isinstance(test_obj, dict):
                     # Check keys in reference are in test
                     for key in ref_obj:
-                        self.assertTrue(key in test_obj, f'Reference key {key} not in test json at {path}')
+                        self.assertTrue(key in test_obj, 'Reference key {0} not in test json at {1}'.format(key,path))
                     # Check keys in test are in reference and recurse
                     for key in test_obj:
-                        self.assertTrue(key in ref_obj, f'Test key {key} not in reference json at {path}')
-                        new_path = f'{path}.{key}' if path else key
+                        self.assertTrue(key in ref_obj, 'Test key {0} not in reference json at {1}'.format(key,path))
+                        new_path = '{0}.{1}'.format(path,key) if path else key
                         recursive_compare(test_obj[key], ref_obj[key], new_path)
                 elif isinstance(test_obj, list):
-                    self.assertTrue(len(test_obj) == len(ref_obj), f'List length mismatch at {path}')
+                    self.assertTrue(len(test_obj) == len(ref_obj), 'List length mismatch at {0}'.format(path))
                     for idx, (t_item, r_item) in enumerate(zip(test_obj, ref_obj)):
-                        new_path = f'{path}[{idx}]'
+                        new_path = '{0}[{1}]'.format(path,idx)
                         recursive_compare(t_item, r_item, new_path)
                 else:
                     if numeric:
@@ -259,10 +259,10 @@ class partialChecks(object):
                         else:
                             err_rel = 0
                         err_tot = err_abs + err_rel
-                        self.assertTrue(err_tot <= tol, f'Total error ({err_tot}) greater than tolerance ({tol}) at {path}: {y_test} in test json != {y_ref} in reference json')
+                        self.assertTrue(err_tot <= tol, 'Total error ({0}) greater than tolerance ({1}) at {2}: {3} in test json != {4} in reference json'.format(err_tot, tol, path, y_test, y_ref))
                     else:
                         # Compare values
-                        self.assertTrue(y_test == y_ref, f'Value mismatch at {path}: {y_test} in test json != {y_ref} in reference json')
+                        self.assertTrue(y_test == y_ref, 'Value mismatch at {0}: {1} in test json != {2} in reference json'.format(path,y_test,y_ref))
             recursive_compare(json_test, json_ref)
         else:
             # Otherwise, save as reference
