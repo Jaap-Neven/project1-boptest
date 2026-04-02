@@ -157,7 +157,7 @@ equation
 <li>
 November 4, 2025, by Ettore Zanetti:<br/>
 Updated model to Modelica 4.0, fixed occupancy profile, door opening 
-and ventilation. This is for This is for <a href=https://github.com/ibpsa/project1-boptest/issues/422>
+and ventilation. This is for <a href=https://github.com/ibpsa/project1-boptest/issues/422>
 BOPTEST issue #422</a>.
 </li>
 <li>
