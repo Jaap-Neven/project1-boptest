@@ -903,8 +903,8 @@ See the BOPTEST design documentation for more information.
 </html>", revisions="<html>
 <ul>
 <li>
-May 30, 2025, by Ettore Zanetti:<br/>
-Updated model to use Modelica 4.0 and IDEAS 3.0.0.
+April 1, 2026, by Ettore Zanetti:<br/>
+Updated model to use Modelica 4.0 and IDEAS 4.0.0.
 This is for <a href=https://github.com/ibpsa/project1-boptest/issues/442>
 BOPTEST issue #442</a>.
 </li>
