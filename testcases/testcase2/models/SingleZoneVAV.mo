@@ -216,7 +216,7 @@ economizer.  See documentation for the specific models for more information.
 <ul>
 <li>
 September 6th, 2025, by Ettore Zanetti:<br/>
-Update test case to Modelica 4.0
+Update test case to Modelica 4.0 and Buildings 12.1.0
 This is for <a href=https://github.com/ibpsa/project1-boptest/issues/422>
 BOPTEST issue #422</a>.
 </li>
