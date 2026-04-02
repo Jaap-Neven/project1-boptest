@@ -818,7 +818,5 @@ December 15, 2019, by David Blum:<br/>
 First implementation.
 </li>
 </ul>
-</html>"),
-  __OpenModelica_commandLineOptions = "--matchingAlgorithm=PFPlusExt --indexReductionMethod=dynamicStateSelection -d=initialization,NLSanalyticJacobian --maxSizeLinearization=10000",
-  __OpenModelica_simulationFlags(lv = "LOG_STDOUT,LOG_ASSERT,LOG_STATS", s = "cvode", variableFilter = ".*"));
+</html>"));
 end TestCase_Ideal;
