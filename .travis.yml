@@ -21,12 +21,15 @@ before_script:
 jobs:
   include:
   - script: docker compose up -d web worker provision && sleep 10 && docker compose up test --no-deps --exit-code-from test
+  - python: 3.10
+    install: pip install --upgrade pip && pip install pandas==2.3.3 numpy==2.2.6 requests==2.32.5 openapi-python-client==0.28.1
+    script: cd testing && make test_autogen_client ARG=--overwrite
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
     script: cd testing && make build_compiler_image && make test_parser
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
-    script: cd testing && make test_data
+    script: cd testing && make build_compiler_image && make test_data
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
     script: cd testing && make test_forecast
@@ -44,34 +47,34 @@ jobs:
     script: cd testing && make build_compiler_image && make test_testcase1
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
-    script: cd testing && travis_wait 90 make test_testcase2_no_compile
+    script: cd testing && make test_testcase2
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
-    script: cd testing && make build_compiler_image && make test_testcase3
+    script: cd testing && make test_testcase3_no_compile
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
-    script: cd testing && travis_wait 90 make test_bestest_air_no_compile
+    script: cd testing && make test_bestest_air_no_compile
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
-    script: cd testing && travis_wait 90 make test_bestest_hydronic_no_compile
+    script: cd testing && make test_bestest_hydronic_no_compile
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
-    script: cd testing && travis_wait 90 make test_bestest_hydronic_heat_pump_no_compile
+    script: cd testing && make test_bestest_hydronic_heat_pump_no_compile
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
-    script: cd testing && travis_wait 90 make test_singlezone_commercial_hydronic_no_compile
+    script: cd testing && make test_singlezone_commercial_hydronic_no_compile
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
-    script: cd testing && travis_wait 90 make test_twozone_apartment_hydronic_no_compile
+    script: cd testing && make test_twozone_apartment_hydronic_no_compile
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
     script: cd testing && travis_wait 90 make test_multizone_office_simple_hydronic_no_compile
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
-    script: cd testing && travis_wait 90 travis_wait 90 make test_multizone_office_simple_air_no_compile ARG="-s test_peak_heat_day,test_typical_heat_day"
+    script: cd testing && travis_wait 90 make test_multizone_office_simple_air_no_compile ARG="-s test_peak_heat_day,test_typical_heat_day"
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
-    script: cd testing && travis_wait 90 travis_wait 90 make test_multizone_office_simple_air_no_compile ARG="-s test_peak_cool_day,test_typical_cool_day,test_mix_day"
+    script: cd testing && travis_wait 90 make test_multizone_office_simple_air_no_compile ARG="-s test_peak_cool_day,test_typical_cool_day,test_mix_day"
   - python: 3.9
     install: pip install --upgrade pip && pip install pandas==1.2.5 numpy==1.20.2 requests==2.25.1
     script: cd testing && travis_wait 90 make test_multizone_office_simple_air_no_compile ARG="-s API"
