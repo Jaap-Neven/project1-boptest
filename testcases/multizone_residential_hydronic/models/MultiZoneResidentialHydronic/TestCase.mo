@@ -172,6 +172,7 @@ protected
   parameter Modelica.Units.SI.Area Spl_Combles_SDB = Spl_SDB_Combles; // Interface with bathroom
   parameter Modelica.Units.SI.Area Spl_Combles_Couloir = Spl_Couloir_Combles; // Interface with corridor
   parameter Modelica.Units.SI.MassFlowRate Q_Combles = 0.5*S_Combles*H_Combles/2/3600*d_air; // Infiltration air mass flow rate
+  parameter Modelica.Units.SI.Angle alpha_Attic = Modelica.Math.atan(H_Combles/4); // Tilt angle of North and South roofs in the attic
 
   Modelica.Blocks.Sources.BooleanExpression booDHW(y=false)
     annotation (Placement(transformation(extent={{-190,-170},{-178,-154}})));
@@ -616,11 +617,11 @@ public
           Buildings.Types.Tilt.Ceiling,Buildings.Types.Tilt.Ceiling,Buildings.Types.Tilt.Ceiling,
           Buildings.Types.Tilt.Ceiling,Buildings.Types.Tilt.Ceiling}),
     datConExt(
-      layers={CeilingWall,ExtWall,CeilingWall,ExtWall},
+      layers={CeilingWall,ExtWall,ExtWall,CeilingWall},
       A={Spe_Combles_exterieur_Nord,Spl_Combles_Est,Spl_Combles_Ouest,
           Spe_Combles_exterieur_Sud},
-      til={Buildings.Types.Tilt.Ceiling,Buildings.Types.Tilt.Wall,Buildings.Types.Tilt.Floor,
-          Buildings.Types.Tilt.Ceiling},
+      til={alpha_Attic,Buildings.Types.Tilt.Wall,Buildings.Types.Tilt.Wall,
+          alpha_Attic},
       azi={Buildings.Types.Azimuth.N,Buildings.Types.Azimuth.E,Buildings.Types.Azimuth.W,
           Buildings.Types.Azimuth.S}),
     T_start=273.15 + 19,
