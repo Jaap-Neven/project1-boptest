@@ -28,7 +28,7 @@ def compile_fmu():
 
     # DEFINE MODEL
     # ------------
-    mopath      = 'MultiZoneResidentialHydronic'
+    mopath      = 'MultiZoneResidentialHydronic/package.mo'
     modelpath   = 'MultiZoneResidentialHydronic.TestCase'
     # ------------
 

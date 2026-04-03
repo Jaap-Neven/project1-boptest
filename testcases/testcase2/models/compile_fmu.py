@@ -13,7 +13,7 @@ The following libraries must be on the MODELICAPATH:
 """
 
 from parsing import parser
-import sys 
+import sys
 
 def compile_fmu():
     '''Compile the fmu.
@@ -27,7 +27,7 @@ def compile_fmu():
 
     # DEFINE MODEL
     # ------------
-    mopath = 'SingleZoneVAV.mo';
+    mopath = 'SingleZoneVAV.mo'
     modelpath = 'SingleZoneVAV.TestCaseSupervisory'
     # ------------
 

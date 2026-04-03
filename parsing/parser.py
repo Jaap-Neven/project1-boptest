@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Implements the .mo file parsing and generates wrapped.fmu. The supported
-tools are OpenModelica, Dymola, and OCT. In order to parse with a supported tool, 
-it must be installed on the system.
-Choose as tool for compilation using variable "tool".
+Implements the .mo file parsing and generates teh test case wrapped.fmu.
+The supported tools are OpenModelica, Dymola, and OCT.
+In order to parse with a supported tool, it must be installed on the system.
+The primary function to use here is export_fmu() and its arguments for
+tool and solver options.
 
-The steps are:
+The general steps are:
 1) Compile Modelica code into fmu
 2) Use signal exchange block id parameters to find block instance paths and
 read any associated signals for KPIs, units, min/max, and descriptions.
@@ -32,22 +33,84 @@ if 'MODELICAPATH' in os.environ:
 else:
     modelicapath=os.path.abspath('.')
 
-def compile_fmu_dymola(model_path, algorithm='Cvode', tolerance=1e-6):
-    '''Execute dymola process to compile FMU.
+def compile_fmu_OM(model_path, file_name, algorithm='cvode', tolerance=1e-6):
+    '''Use OpenModelica via OMPython to compile FMU.
 
+    Parameters
+    ----------
+    model_path : str
+        Path to modelica model
+    file_name : list
+        Path(s) to modelica file and required libraries not on MODELICAPATH.
+    algorithm : str, optional
+        Specify the solver algorithm. Only 'cvode' available for OpenModelica.
+        Default is 'cvode'.
+    tolerance : numeric, optional
+        Specify the solver tolerance.
+        Default is 1e-6.
+
+    Returns
+    -------
+    fmu_path : str
+        Generated FMU path.
+
+    '''
+
+    from OMPython import OMCSessionZMQ
+    omc = OMCSessionZMQ()
+    # Load libraries from MODELICAPATH
+    libs = []
+    for d in os.environ['MODELICAPATH'].split(':'):
+        if ('Buildings' in d):
+            path = d+'/package.mo'
+        elif ('IDEAS' in d):
+            path = d+'/package.mo'
+        elif ('IBPSA' in d):
+            path = d+'/package.mo'
+        else:
+            continue
+        libs.append(path)
+    for f in file_name:
+        res = omc.sendExpression('loadFile("{0}")'.format(f))
+        print('Loaded file: {0}, {1}'.format(f, res))
+    # Load Modelica library
+    res = omc.sendExpression('loadModel(Modelica)')
+    print('Loaded library: Modelica, {0}'.format(res))
+    # Load packages from libraries
+    for lib in libs:
+        res = omc.sendExpression('loadFile("{0}")'.format(lib))
+        print('Loaded library: {0}, {1}'.format(lib, res))
+    # Set Compilation Flags as annotations
+    res = omc.sendExpression('setCommandLineOptions("--matchingAlgorithm=PFPlusExt \
+                             --indexReductionMethod=dynamicStateSelection -d=initialization")')
+
+    # Set simulation flags via fmiFlags
+    res = omc.sendExpression('setCommandLineOptions("--fmiFlags=s:{0},lv:LOG_STDOUT \
+                             LOG_ASSERT LOG_STATS,tolerance:{1}")'.format(algorithm,tolerance))
+
+    # Compile FMU
+    fmu_path = omc.sendExpression('buildModelFMU({0}, fmuType="cs")'.format(model_path))
+
+    return fmu_path
+
+def compile_fmu_dymola(model_path, algorithm='Cvode', tolerance=1e-6):
+    '''Use Dymola to compile FMU.
+
+    Parameters
+    ----------
     model_path : str
         Path to modelica model
     algorithm : str, optional
         Specify the solver algorithm. Options are 'Cvode', 'Dassl', 'Radau', 'Lsodar'.
         Default is 'Cvode'.
     tolerance : numeric, optional
-        Specify the solver tolerance. 
+        Specify the solver tolerance.
         Default is 1e-6.
-    
+
     Returns
     -------
     fmu_path : str
-        generated FMU path.
+        Generated FMU path.
 
     '''
 
@@ -176,8 +239,8 @@ def parse_instances(model_path, file_name, tool='openmodelica', algorithm='cvode
     tool : str, optional
         FMU compilation tool. "OCT" or "dymola" or "openmodelica" supported.
         Default is "openmodelica".
-   algorithm : str, optional
-        Specify the solver algorithm. Check _solver_check function for options
+    algorithm : str, optional
+        Specify the solver algorithm. Check _solver_check function for options.
         Default is 'cvode'.
     tolerance : numeric, optional
         Specify the solver tolerance.
@@ -198,7 +261,7 @@ def parse_instances(model_path, file_name, tool='openmodelica', algorithm='cvode
     # Compile fmu
     if tool == 'OCT':
         from pymodelica import compile_fmu
-        fmu_path = compile_fmu(model_path, file_name, modelicapath=modelicapath, jvm_args="-Xmx8g", target='cs', 
+        fmu_path = compile_fmu(model_path, file_name, modelicapath=modelicapath, jvm_args="-Xmx8g", target='cs',
                                compiler_options = {'cs_rel_tol': tolerance,'cs_solver': algorithm})
     elif tool == 'openmodelica':
         fmu_path = compile_fmu_OM(model_path, file_name)
@@ -313,7 +376,7 @@ def parse_instances(model_path, file_name, tool='openmodelica', algorithm='cvode
                 signals[signal_type].append(_make_var_name(instance,style='output'))
             else:
                 signals[signal_type] = [_make_var_name(instance,style='output')]
-    
+
     return instances, signals
 
 def write_wrapper(model_path, file_name, instances, tool='openmodelica', algorithm='cvode', tolerance=1e-6):
@@ -336,7 +399,7 @@ def write_wrapper(model_path, file_name, instances, tool='openmodelica', algorit
         Specify the solver algorithm. Check _solver_check function for options.
         Default is 'cvode'.
     tolerance : numeric, optional
-        Specify the solver tolerance. 
+        Specify the solver tolerance.
         Default is 1e-6.
 
     Returns
@@ -404,7 +467,7 @@ def write_wrapper(model_path, file_name, instances, tool='openmodelica', algorit
         # Export as fmu
         if tool == 'OCT':
             from pymodelica import compile_fmu
-            fmu_path = compile_fmu('wrapped', [wrapped_path]+file_name, modelicapath=modelicapath, jvm_args="-Xmx8g", target='cs', 
+            fmu_path = compile_fmu('wrapped', [wrapped_path]+file_name, modelicapath=modelicapath, jvm_args="-Xmx8g", target='cs',
                                    compiler_options = {'cs_rel_tol': tolerance,'cs_solver': algorithm})
         elif tool == 'openmodelica':
             fmu_path = compile_fmu_OM('wrapped', [wrapped_path]+file_name)
@@ -420,7 +483,7 @@ def write_wrapper(model_path, file_name, instances, tool='openmodelica', algorit
         # Compile fmu
         if tool == 'OCT':
             from pymodelica import compile_fmu
-            fmu_path = compile_fmu(model_path, file_name, modelicapath=modelicapath, jvm_args="-Xmx8g", target='cs', 
+            fmu_path = compile_fmu(model_path, file_name, modelicapath=modelicapath, jvm_args="-Xmx8g", target='cs',
                                    compiler_options = {'cs_rel_tol': tolerance,'cs_solver': algorithm})
         elif tool == 'openmodelica':
             fmu_path = compile_fmu_OM(model_path, file_name)
@@ -449,7 +512,7 @@ def export_fmu(model_path, file_name, tool='openmodelica', algorithm='cvode', to
         Specify the solver algorithm. Check _solver_check function for options.
         Default is 'cvode'.
     tolerance : numeric, optional
-        Specify the solver tolerance. 
+        Specify the solver tolerance.
         Default is 1e-6.
 
     Returns
@@ -463,7 +526,7 @@ def export_fmu(model_path, file_name, tool='openmodelica', algorithm='cvode', to
 
     # Take folder snapshot for cleanup
     folder_content = set(os.listdir())
-    # Check if solver option is valid 
+    # Check if solver option is valid
     _solver_check(algorithm,tool)
     # Get signal exchange instances and kpi signals
     instances, signals = parse_instances(model_path, file_name, tool, algorithm=algorithm, tolerance=tolerance)
@@ -476,7 +539,7 @@ def export_fmu(model_path, file_name, tool='openmodelica', algorithm='cvode', to
     # Generate test case data
     man = Data_Manager()
     man.save_data_and_jsons(fmu_path=fmu_path)
-    
+
     # Clean up
     folder_content_remove = set(os.listdir())
     keep = {"wrapped.fmu", "wrapped.mo","kpis.json"}
@@ -532,92 +595,33 @@ def _make_var_name(block, style, description='', attribute=''):
 
     return var_name
 
-def _solver_check(algorithm,tool):
-    '''Checks if solver option is correct for the chosen tool.
+def _solver_check(algorithm, tool):
+    '''Checks if solver option is valid for the chosen tool.
+
+    Parameters
+    ----------
     algorithm : str
         Specify the solver algorithm.
-        Default is "cvode"
     tool : str, optional
         FMU compilation tool.  "OCT" or "dymola" or "openmodelica" supported.
-        Default is "openmodelica".
 
     '''
+
     # Check solver option is valid
     if tool == 'dymola':
         valid_algorithms =  ['Cvode', 'Dassl', 'Radau', 'Lsodar']
         if (algorithm not in valid_algorithms):
-            raise ValueError('Invalid algorithm "{0}" for tool Dymola. Choose from {1}.'.format(algorithm, valid_algorithms))
-            
-    elif tool == 'openmodelica': 
+            raise ValueError('Invalid algorithm "{0}" for tool {1}. Choose from {2}.'.format(algorithm, tool, valid_algorithms))
+    elif tool == 'openmodelica':
         valid_algorithms = ['cvode']
         if (algorithm not in valid_algorithms):
-            raise ValueError('Invalid algorithm "{0}" for tool OpenModelica. Choose from {1}.'.format(algorithm, valid_algorithms))    
-            
+            raise ValueError('Invalid algorithm "{0}" for tool {1}. Choose from {2}.'.format(algorithm, tool, valid_algorithms))
     elif tool == 'OCT':
         valid_algorithms = ['CVode', 'Radau5ODE', 'RungeKutta34', 'ExplicitEuler']
         if (algorithm not in valid_algorithms):
-            raise ValueError('Invalid algorithm "{0}" for tool OCT. Choose from {1}.'.format(algorithm, valid_algorithms))
-            
+            raise ValueError('Invalid algorithm "{0}" for tool {1}. Choose from {2}.'.format(algorithm, tool, valid_algorithms))
     else:
         raise ValueError('Tool {0} unknown.'.format(tool))
-    
-
-def compile_fmu_OM(model_path, file_name, algorithm='cvode', tolerance=1e-6):
-    '''Utilize OMPython to compile OpenModelica FMU.
-
-    model_path : str
-        Path to modelica model
-    file_name : list
-        Path(s) to modelica file and required libraries not on MODELICAPATH.
-    algorithm : str, optional
-        Specify the solver algorithm. Only 'cvode' available for OpenModelica.
-        Default is 'cvode'.
-    tolerance : numeric, optional
-        Specify the solver tolerance. 
-        Default is 1e-6.
-    
-    Returns
-    -------
-    fmu_path : str
-        generated FMU path.
-
-    '''
-    from OMPython import OMCSessionZMQ
-    omc = OMCSessionZMQ()
-    # Load libraries from MODELICAPATH
-    libs = []
-    for d in os.environ['MODELICAPATH'].split(':'):
-        if ('Buildings' in d):
-            path = d+'/package.mo'
-        elif ('IDEAS' in d):
-            path = d+'/package.mo'
-        elif ('IBPSA' in d):
-            path = d+'/package.mo'
-        else:
-            continue
-        libs.append(path)
-    for f in file_name:
-        res = omc.sendExpression('loadFile("{0}")'.format(f))
-        print('Loaded file: {0}, {1}'.format(f, res))
-    # Load Modelica library
-    res = omc.sendExpression('loadModel(Modelica)')
-    print('Loaded library: Modelica, {0}'.format(res))
-    # Load packages from libraries
-    for lib in libs:
-        res = omc.sendExpression('loadFile("{0}")'.format(lib))
-        print('Loaded library: {0}, {1}'.format(lib, res))
-    # Set Compilation Flags as annotations
-    res = omc.sendExpression('setCommandLineOptions("--matchingAlgorithm=PFPlusExt \
-                             --indexReductionMethod=dynamicStateSelection -d=initialization")')
-    
-    # Set simulation flags via fmiFlags
-    res = omc.sendExpression('setCommandLineOptions("--fmiFlags=s:{0},lv:LOG_STDOUT \
-                             LOG_ASSERT LOG_STATS,tolerance:{1}")'.format(algorithm,tolerance))
-
-    # Compile FMU
-    fmu_path = omc.sendExpression('buildModelFMU({0}, fmuType="cs")'.format(model_path))
-
-    return fmu_path
 
 if __name__ == '__main__':
     # Define model

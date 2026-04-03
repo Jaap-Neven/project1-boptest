@@ -27,7 +27,7 @@ def compile_fmu():
 
     # DEFINE MODEL
     # ------------
-    mopath = 'SimpleRC.mo';
+    mopath = 'SimpleRC.mo'
     modelpath = 'SimpleRC'
     # ------------
 
