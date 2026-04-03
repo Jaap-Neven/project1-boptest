@@ -160,7 +160,7 @@ protected
 
   // Attic
   parameter Modelica.Units.SI.Area S_Combles = 100 * S/S_ref; // Attic floor area
-  parameter Modelica.Units.SI.Area Spe_Combles_exterieur_Nord = sqrt(H_Combles^2 + (8*sqrt(S/S_ref))^2)*(12.7*sqrt(S/S_ref)); // Roof surface (north slope)
+  parameter Modelica.Units.SI.Area Spe_Combles_exterieur_Nord = sqrt(H_Combles^2 + (4*sqrt(S/S_ref))^2)*(12.7*sqrt(S/S_ref)); // Roof surface (north slope)
   parameter Modelica.Units.SI.Area Spl_Combles_Est = 8 * H_Combles/2 * sqrt(S/S_ref); // Gable wall (east)
   parameter Modelica.Units.SI.Area Spl_Combles_Ouest = Spl_Combles_Est; // Gable wall (west)
   parameter Modelica.Units.SI.Area Spe_Combles_exterieur_Sud = Spe_Combles_exterieur_Nord; // Roof surface (south slope)
