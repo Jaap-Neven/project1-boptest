@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 This module compiles the defined test case model into an FMU using the
-overwrite block parser.
+BOPTEST parser.
+
+The tool cli argument is the FMU compilation tool.  "OCT" or "dymola" or "openmodelica" supported.
+i.e. python compile_fmu openmodelica
 
 The following libraries must be on the MODELICAPATH:
 
-- Modelica Buildings
+- Buildings
 
 """
 import sys
@@ -30,7 +33,7 @@ def compile_fmu():
 
     # COMPILE FMU
     # -----------
-    fmupath = parser.export_fmu(modelpath, [mopath], tool = sys.argv[1], algorithm='Cvode', tolerance=1e-6)
+    fmupath = parser.export_fmu(modelpath, [mopath], tool = sys.argv[1], algorithm='cvode', tolerance=1e-6)
     # -----------
 
     return fmupath
