@@ -93,7 +93,7 @@ class ParseInstances(unittest.TestCase):
         '''
 
         # Run the parse_instances method
-        self.instances, self.signals = parser.parse_instances(model_path, [mo_path], tool='openmodelica', algorithm='Cvode', tolerance=1e-6)
+        self.instances, self.signals = parser.parse_instances(model_path, [mo_path], tool='openmodelica', algorithm='cvode', tolerance=1e-6)
 
     def test_parse_instances(self):
         '''Tests that Read and Overwrite blocks identified correctly.
@@ -215,7 +215,7 @@ class ParseInstancesMultiZone(unittest.TestCase, utilities.partialChecks):
 
     def test_export(self):
         # Parse and export fmu to working directory
-        self.fmu_path, self.kpi_path = parser.export_fmu(self.model_path, [self.mo_path], tool='openmodelica', algorithm='Cvode', tolerance=1e-6)
+        self.fmu_path, self.kpi_path = parser.export_fmu(self.model_path, [self.mo_path], tool='openmodelica', algorithm='cvode', tolerance=1e-6)
         # Test
         ref_kpis_json_path = os.path.join(testing_root_dir, 'references', 'parser', 'kpis_MultiZone.json')
         passed = _compare_kpis_json(self.fmu_path, ref_kpis_json_path)
@@ -232,9 +232,9 @@ class WriteWrapper(unittest.TestCase):
         '''
 
         # Get signal exchange instances
-        instances, signals = parser.parse_instances(model_path, [mo_path], tool='openmodelica', algorithm='Cvode', tolerance=1e-6)
+        instances, signals = parser.parse_instances(model_path, [mo_path], tool='openmodelica', algorithm='cvode', tolerance=1e-6)
         # Write wrapper and export as fmu
-        self.fmu_path, self.wrapped_path = parser.write_wrapper(model_path, [mo_path], instances, tool='openmodelica', algorithm='Cvode', tolerance=1e-6)
+        self.fmu_path, self.wrapped_path = parser.write_wrapper(model_path, [mo_path], instances, tool='openmodelica', algorithm='cvode', tolerance=1e-6)
 
     def test_create_wrapped(self):
         self.assertEqual(self.fmu_path, os.path.join(os.path.dirname(testing_root_dir), 'wrapped.fmu'))
@@ -268,7 +268,7 @@ class ExportSimulate(unittest.TestCase, utilities.partialChecks):
         '''
 
         # Parse and export fmu to working directory
-        self.fmu_path, self.kpi_path = parser.export_fmu(model_path, [mo_path], tool='openmodelica', algorithm='Cvode', tolerance=1e-6)
+        self.fmu_path, self.kpi_path = parser.export_fmu(model_path, [mo_path], tool='openmodelica', algorithm='cvode', tolerance=1e-6)
 
     def test_kpis_json(self):
         '''Test that kpi json exported correctly.
@@ -358,7 +358,7 @@ class NoSignalExchangeBlock(unittest.TestCase, utilities.partialChecks):
 
     def test_export(self):
         # Parse and export fmu to working directory
-        self.fmu_path, self.kpi_path = parser.export_fmu(self.model_path, [self.mo_path], tool='openmodelica', algorithm='Cvode', tolerance=1e-6)
+        self.fmu_path, self.kpi_path = parser.export_fmu(self.model_path, [self.mo_path], tool='openmodelica', algorithm='cvode', tolerance=1e-6)
         # Test
         ref_kpis_json_path = os.path.join(testing_root_dir, 'references', 'parser', 'kpis_NoSignalExchangeBlocks.json')
         passed = _compare_kpis_json(self.fmu_path, ref_kpis_json_path)
@@ -380,7 +380,7 @@ class OnlyReadSignalExchangeBlock(unittest.TestCase, utilities.partialChecks):
 
     def test_export(self):
         # Parse and export fmu to working directory
-        self.fmu_path, self.kpi_path = parser.export_fmu(self.model_path, [self.mo_path], tool='openmodelica', algorithm='Cvode', tolerance=1e-6)
+        self.fmu_path, self.kpi_path = parser.export_fmu(self.model_path, [self.mo_path], tool='openmodelica', algorithm='cvode', tolerance=1e-6)
         # Test
         ref_kpis_json_path = os.path.join(testing_root_dir, 'references', 'parser', 'kpis_OnlyReadSignalExchangeBlocks.json')
         passed = _compare_kpis_json(self.fmu_path, ref_kpis_json_path)

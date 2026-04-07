@@ -19,16 +19,16 @@ import sys
 
 def compile_fmu():
     '''Compile the fmu.
-    
+
     Returns
     -------
     fmupath : str
         Path to compiled fmu.
-    
+
     '''
-    
+
     # DEFINE MODEL
-    mopath = 'TwoZoneApartmentHydronic'
+    mopath = 'TwoZoneApartmentHydronic/package.mo'
     modelpath = 'TwoZoneApartmentHydronic.TestCases.ApartmentModelQHTyp'
 
 
@@ -36,6 +36,6 @@ def compile_fmu():
     fmupath = parser.export_fmu(modelpath, [mopath], tool =  sys.argv[1], algorithm='Cvode', tolerance=1e-6)
 
     return fmupath
-    
+
 if __name__ == "__main__":
     fmupath = compile_fmu()

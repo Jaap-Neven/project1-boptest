@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 This module compiles the defined test case model into an FMU using the
-BOPTEST parser. 
+BOPTEST parser.
 
 The tool cli argument is the FMU compilation tool.  "OCT" or "dymola" or "openmodelica" supported.
 i.e. python compile_fmu openmodelica
@@ -13,7 +13,7 @@ The following libraries must be on the MODELICAPATH:
 """
 
 from parsing import parser
-import sys 
+import sys
 
 def compile_fmu():
     '''Compile the fmu.
@@ -27,7 +27,7 @@ def compile_fmu():
 
     # DEFINE MODEL
     # ------------
-    mopath = 'TwoZones.mo';
+    mopath = 'TwoZones.mo'
     modelpath = 'TwoZones'
     # ------------
 

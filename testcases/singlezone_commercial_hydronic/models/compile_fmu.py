@@ -17,26 +17,26 @@ import sys
 
 def compile_fmu():
     '''Compile the fmu.
-    
+
     Returns
     -------
     fmupath : str
         Path to compiled fmu.
-    
+
     '''
-    
+
     # DEFINE MODEL
     # ------------
-    mopath = 'OU44Emulator'
+    mopath = 'OU44Emulator/package.mo'
     modelpath = 'OU44Emulator.Models.Validation.RealOccupancy'
     # ------------
-    
+
     # COMPILE FMU
     # -----------
     fmupath = parser.export_fmu(modelpath, [mopath], tool = sys.argv[1], algorithm='Cvode', tolerance=1e-6)
     # -----------
 
     return fmupath
-    
+
 if __name__ == "__main__":
     fmupath = compile_fmu()

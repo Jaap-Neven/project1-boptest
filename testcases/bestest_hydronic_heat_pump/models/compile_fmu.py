@@ -27,7 +27,7 @@ def compile_fmu():
 
     # DEFINE MODEL
     # ------------
-    mopath      = 'BESTESTHydronicHeatPump'
+    mopath      = 'BESTESTHydronicHeatPump/package.mo'
     modelpath   = 'BESTESTHydronicHeatPump.TestCase'
     # ------------
 
