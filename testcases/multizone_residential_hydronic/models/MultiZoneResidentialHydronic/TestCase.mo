@@ -2325,7 +2325,9 @@ zones:
 <p>
 The building envelope was defined in order to cover the new construction
 modes existing on the market. Thus, each of these modes was characterized
-by a different level of insulation (Table 1).
+by a different level of insulation (Table 1). The U-values include the effects
+of the conductive resistances of the wall layers, and both internal and
+external convection (h<sub>in</sub> = 7.7 W/m²·K, h<sub>ex</sub> = 25 W/m²·K).
 </p>
 
 <p><span style=\"font-family: Arial,sans-serif;\">Table 1.Building envelope characteristic</span> </p>
@@ -2347,7 +2349,7 @@ by a different level of insulation (Table 1).
 </tr>
 <tr>
 <td></td>
-<td><p><br><br><br><b><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">U = 4.653 W.m<sup>-2</sup>.K<sup>-1</span></b></sup></p></td>
+<td><p><br><br><br><b><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">U = 2.599 W.m<sup>-2</sup>.K<sup>-1</span></b></sup></p></td>
 </tr>
 <tr>
 <td><p><b><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">Floor</span></b></p></td>
