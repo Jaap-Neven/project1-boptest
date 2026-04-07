@@ -2349,7 +2349,7 @@ external convection (h<sub>in</sub> = 7.7 W/m²·K, h<sub>ex</sub> = 25 W/m²·K
 </tr>
 <tr>
 <td></td>
-<td><p><br><br><br><b><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">U = 2.599 W.m<sup>-2</sup>.K<sup>-1</span></b></sup></p></td>
+<td><p><br><br><br><b><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">U = 2.107 W.m<sup>-2</sup>.K<sup>-1</span></b></sup></p></td>
 </tr>
 <tr>
 <td><p><b><span style=\"font-family: Arial,sans-serif; font-size: 10pt;\">Floor</span></b></p></td>
